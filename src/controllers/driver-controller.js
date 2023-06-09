@@ -1,13 +1,22 @@
 let drivers = [
   {
     ID: 1,
-    Name: "Driver 1",
-    Nationality: "Nationality 1",
-    Team: null,
+    Name: "Max Verstappen",
+    Nationality: "Dutch",
+    Team: "RedBull",
     RacingNumber: 1,
-    RacesWon: [],
-    ImageLink: "driver1_image.png",
+    RacesWon: ["Belgium Grandprix", "Monaco Grandprix", "Austrian Grandprix"],
+    ImageLink: "https://media.formula1.com/content/dam/fom-website/drivers/2023Drivers/verstappen.jpg.img.640.medium.jpg/1677069646195.jpg",
   },
+  {
+    ID: 2,
+    Name: "Lewis Hamilton",
+    Nationality: "British",
+    Team: "Mercedes",
+    RacingNumber: 44,
+    RacesWon: ["Spanish Grandprix", "Canadian Grandprix"],
+    ImageLink: "https://media.formula1.com/content/dam/fom-website/drivers/2023Drivers/hamilton.jpg.img.1920.medium.jpg/1677069594164.jpg",
+  }
 ];
 
 export function getAllDrivers(req, res) {
@@ -32,8 +41,6 @@ export function getSpecificDriver(req, res) {
 export function addNewDriver(req, res) {
   const newDriver = req.body;
   newDriver.ID = drivers.length + 1;
-  newDriver.Team = null;
-  newDriver.RacesWon = [];
   drivers.push(newDriver);
 
   if (newDriver.ID) {
