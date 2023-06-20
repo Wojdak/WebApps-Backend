@@ -26,7 +26,7 @@ export function getSpecificRace(req, res) {
 export function addNewRace(req, res) {
   const { RaceName, CircuitName, Country, NumberOfLaps, Date, ImageLink } = req.body;
   const result = db.prepare(
-    "INSERT INTO Race (RaceName, CircuitName, Country, NumberOfLaps, Date, Winner, ImageLink) VALUES (?, ?, ?, ?, ?, ?, ?)"
+    "INSERT INTO Race (RaceName, CircuitName, Country, NumberOfLaps, Date, WinnerID, ImageLink) VALUES (?, ?, ?, ?, ?, ?, ?)"
   ).run(RaceName, CircuitName, Country, NumberOfLaps, Date, null, ImageLink);
 
   if (result.changes > 0) {
