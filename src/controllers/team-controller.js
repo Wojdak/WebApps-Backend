@@ -45,11 +45,18 @@ export function updateTeam(req, res) {
 
 export function deleteTeam(req, res) {
   const id = parseInt(req.params.id);
+
+  db.prepare("BEGIN TRANSACTION").run();
+
+  db.prepare("UPDATE Driver SET TeamID = NULL WHERE TeamID = ?").run(id);
+
   const result = db.prepare("DELETE FROM Team WHERE ID = ?").run(id);
 
   if (result.changes > 0) {
+    db.prepare("COMMIT").run();
     res.status(200).json({ message: "Team deleted successfully" });
   } else {
+    db.prepare("ROLLBACK").run();
     res.status(404).json({ error: "Team not found" });
   }
 }
