@@ -1,74 +1,60 @@
-import db from "../../database/db.js";
+import * as db from '../../database/database-helper.js';
+import {StatusCodes} from "http-status-codes";
 
 export function getAllDrivers(req, res) {
   const { nationality } = req.query;
-  let query = "SELECT * FROM Driver";
 
   if (nationality) {
-    query = `SELECT * FROM Driver WHERE Nationality = '${nationality}'`;
+    return res.status(StatusCodes.OK).json(db.getAllDriversFilltered(nationality));
   }
 
-  const drivers = db.prepare(query).all();
-  res.status(200).json(drivers);
+  return res.status(StatusCodes.OK).json(db.getAllDrivers());
 }
 
 export function getSpecificDriver(req, res) {
   const id = parseInt(req.params.id);
-  const driver = db.prepare("SELECT * FROM Driver WHERE ID = ?").get(id);
+  const driver = db.getSpecificDriver(id);
 
   if (driver) {
-    res.status(200).json(driver);
+    driver.Team = db.getSpecificTeam(driver.TeamID)
+    driver.RacesWon = db.findRacesWon(id);
+    res.status(StatusCodes.OK).json(driver);
   } else {
-    res.status(404).json({ error: "Driver not found" });
+    res.status(StatusCodes.NOT_FOUND).json({ error: "Driver not found" });
   }
 }
 
 export function addNewDriver(req, res) {
   const { Name, Nationality, TeamID, RacingNumber, ImageLink } = req.body;
-  const result = db
-    .prepare(
-      "INSERT INTO Driver (Name, Nationality, TeamID, RacingNumber, ImageLink) VALUES (?, ?, ?, ?, ?)"
-    )
-    .run(Name, Nationality, TeamID, RacingNumber, ImageLink);
+  const result = db.addNewDriver(Name, Nationality, TeamID, RacingNumber, ImageLink);
 
   if (result.changes > 0) {
-    res.status(201).json({ message: "New driver added successfully" });
+    res.status(StatusCodes.CREATED).json({ message: "New driver added successfully" });
   } else {
-    res.status(500).json({ error: "Failed to add driver" });
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: "Failed to add driver" });
   }
 }
 
 export function updateDriver(req, res) {
   const id = parseInt(req.params.id);
   const { Name, Nationality, TeamID, RacingNumber, ImageLink } = req.body;
-  const result = db
-    .prepare(
-      "UPDATE Driver SET Name = ?, Nationality = ?, TeamID = ?, RacingNumber = ?, ImageLink = ? WHERE ID = ?"
-    )
-    .run(Name, Nationality, TeamID, RacingNumber, ImageLink, id);
+  const result = db.updateDriver(Name, Nationality, TeamID, RacingNumber, ImageLink, id)
 
   if (result.changes > 0) {
-    res.status(200).json({ message: "Driver updated successfully" });
+    res.status(StatusCodes.OK).json({ message: "Driver updated successfully" });
   } else {
-    res.status(404).json({ error: "Driver not found" });
+    res.status(StatusCodes.NOT_FOUND).json({ error: "Driver not found" });
   }
 }
 
 export function deleteDriver(req, res) {
   const id = parseInt(req.params.id);
-
-  db.prepare("BEGIN TRANSACTION").run();
-
-  db.prepare("UPDATE Race SET WinnerID = NULL WHERE WinnerID = ?").run(id);
-
-  const result = db.prepare("DELETE FROM Driver WHERE ID = ?").run(id);
+  const result = db.deleteDriver(id);
 
   if (result.changes > 0) {
-    db.prepare("COMMIT").run();
-    res.status(200).json({ message: "Driver deleted successfully" });
+    res.status(StatusCodes.OK).json({ message: "Driver deleted successfully" });
   } else {
-    db.prepare("ROLLBACK").run();
-    res.status(404).json({ error: "Driver not found" });
+    res.status(StatusCodes.NOT_FOUND).json({ error: "Driver not found" });
   }
 }
 
