@@ -3,6 +3,12 @@ import {StatusCodes} from "http-status-codes";
 
 
 export function getAllTeams(req, res) {
+  const { teamChief } = req.query;
+
+  if(teamChief){
+    return res.status(StatusCodes.OK).json(db.getAllTeamsFilltered(teamChief));
+  }
+
   return res.status(StatusCodes.OK).json(db.getAllTeams());
 }
 

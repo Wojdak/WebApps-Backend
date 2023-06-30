@@ -283,6 +283,10 @@ export function getAllTeams(){
   return db.prepare(queries.getAllTeamsQuery).all();
 }
 
+export function getAllTeamsFilltered(teamChief){
+  return db.prepare(queries.getAllTeamsFilteredQuery).all(teamChief);
+}
+
 export function addNewTeam(Name, TeamChief, LogoImageLink, TeamChiefImageLink){
   return db.prepare(queries.addNewTeamQuery).run(Name, TeamChief, LogoImageLink, TeamChiefImageLink);
 }

@@ -45,6 +45,7 @@ export const updateRaceWhenDeletingDriverQuery = `UPDATE Race SET WinnerID = NUL
 export const findDriversQuery = `SELECT * FROM Driver WHERE TeamID = ?`;
 
 export const getAllTeamsQuery = `SELECT * FROM Team`;
+export const getAllTeamsFilteredQuery = `SELECT * FROM Team WHERE TeamChief = ? `;
 export const getSpecificTeamQuery = `SELECT * FROM Team WHERE ID = ?`;
 export const addNewTeamQuery = `INSERT INTO Team (Name, TeamChief, LogoImageLink, TeamChiefImageLink) VALUES (?, ?, ?, ?)`;
 export const updateTeamQuery = `UPDATE Team SET Name = ?, TeamChief = ?, LogoImageLink = ?, TeamChiefImageLink = ? WHERE ID = ?`;
