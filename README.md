@@ -45,7 +45,7 @@ To start the application run `npm install` and then `npm run start` in the termi
         }
         ```
     - PUT /races/{id}: Update details of a specific race by ID (requires a body like in POST).
-    - DELETE /race/{id}: Delete race with the given ID.
+    - DELETE /races/{id}: Delete race with the given ID.
       
 2. **Team**
     - GET /teams: Retrieve a list of all teams.
